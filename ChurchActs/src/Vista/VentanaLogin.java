@@ -1,9 +1,12 @@
 package Vista;
+import Controlador.EventoLoginUsuario;
+import Modelo.Conexion;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,14 +14,20 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 /**
  *
- * @author Diego
+ * @author Diego y Bryan
  */
 public class VentanaLogin extends JFrame {
+ private Conexion conexion;   
  private JPasswordField jpfContraseña;
  private JTextField jtfUsuario;
  private JLabel  jlUsuario , jlContraseña , jlTitulo , jlImagen;
- private JPanel jpUsuario , jpContraseña , jpContenedor;
- 
+ private JPanel jpContenedor;
+ private JButton jbIngresar;
+   
+   /**
+    *  Método contructor para iniciar el JFrame.
+    *   @author Diego y Bryan
+    */
     public VentanaLogin () {
        setTitle("Ventana de Inicio");
        setSize(500,500);
@@ -27,11 +36,13 @@ public class VentanaLogin extends JFrame {
        crearLayout();
        setVisible(true);
     }
-    
-    
-    
+    /**
+     *  Método para crear los objetos de la clase y llamar los métodos que son requeridos.
+     *  @author Diego y Bryan
+     */
     private void iniciarComponentes() {
        ////////////////////////////////////////////////////////////////////////////
+       conexion = new Conexion();
        Font fuentetxt = new Font("Arial Black" , Font.BOLD , 20);
        jlTitulo = new JLabel("ChurchActs-Login");
        jlTitulo.setFont(fuentetxt);
@@ -45,18 +56,18 @@ public class VentanaLogin extends JFrame {
        jtfUsuario.setFont( new Font("Arial Black" , Font.BOLD , 13));
        jpfContraseña = new JPasswordField(12);
        jpfContraseña.setFont( new Font("Arial Black" , Font.BOLD ,13));
-       jpUsuario = new JPanel();
-       jpContraseña = new JPanel();
+       jbIngresar = new JButton("Ingresar");
+       jbIngresar.setFont( new Font("Arial Black" , Font.BOLD , 13));
+       jbIngresar.setIcon( new ImageIcon( getClass().getClassLoader().getResource("Imagenes/jbIngresar.png")) );
+       jbIngresar.addActionListener( new EventoLoginUsuario( conexion, jtfUsuario.getText(), String.valueOf(jpfContraseña.getPassword())  ) );
        jpContenedor = new JPanel();
-       /////////////////////////////////////////////////////////////////////////
     }
-    
-    
     /**
-        Método que permite disponer los componentes para la GUI login.
+     * Método que permite disponer los componentes para la GUI login.
+     * @author Diego y Bryan
      */
     private void crearLayout () {
-      jpContenedor.setBackground(Color.CYAN);
+      jpContenedor.setBackground( new Color(62,95,138));
       jpContenedor.setLayout (new GridBagLayout());
       agregarJLTitulo();
       agregarJLImagen();
@@ -64,22 +75,28 @@ public class VentanaLogin extends JFrame {
       agregarJLContraseña();
       agregarJTFUsuario();
       agregarJPFContraseña();
+      agregarJBIngresar();
       add(jpContenedor);
     }
    
-    //metodo que agrega al layout el jlTitulo.
+    /**
+     * Método que agrega al gridbaglayout el jlTitulo.
+     *  @author Diego y Bryan
+     */
    private void agregarJLTitulo() {
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.gridx = 1;
-      gbc.gridy = 1;
+      gbc.gridy = 0;
       gbc.gridheight = 1;
       gbc.gridwidth = 2;
-      gbc.anchor = GridBagConstraints.CENTER;
-      gbc.weighty = 1.0;
+      gbc.anchor = GridBagConstraints.SOUTH;
+      //gbc.weighty = 1.0;
       jpContenedor.add(jlTitulo , gbc);
    }
-    
-   //metodo que agregar al layout el jlImagen
+    /**
+     * Método que agrega al gridbaglayout el jlImagen.
+     * @author Diego y Bryan
+     */
    private void agregarJLImagen(){
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.gridx = 1;
@@ -90,56 +107,76 @@ public class VentanaLogin extends JFrame {
       gbc.fill= GridBagConstraints.BOTH;
       jpContenedor.add(jlImagen , gbc);
    }
-   
-   //metodo que agrega al layout el jlUsuario
+   /**
+    *  Método que agrega al gridbaglayout el jlUsuario.
+    *  @author Diego y Bryan
+    */
    private void agregarJLUsuario() {
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.gridx = 1;
       gbc.gridy = 4;
       gbc.gridheight = 1;
       gbc.gridwidth  = 1;
-      gbc.anchor = GridBagConstraints.SOUTH;
+      gbc.anchor = GridBagConstraints.CENTER;
       gbc.weighty = 1.0;
       jpContenedor.add(jlUsuario , gbc);
    }
-   
-   //metodo que agrega al layout el jlContraseña 
+   /**
+    *  Método que agrega al gridbaglayout el jlContraseña.
+    *  @author Diego y Bryan
+    */
    private void agregarJLContraseña() {
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.gridx = 1;
-      gbc.gridy = 5;
+      gbc.gridy = 6;
       gbc.gridheight = 1;
       gbc.gridwidth = 1;
-      gbc.anchor = GridBagConstraints.NORTH;
+      gbc.anchor = GridBagConstraints.CENTER;
       gbc.weighty = 1.0;
       jpContenedor.add(jlContraseña , gbc);
    }
-   
-   //metodo que agrega al layout el jtfUsuario
+   /**
+    *  Método que agrega al gridbaglayout el jtfUsuario.
+    *   @author Diego y Bryan
+    */
    private void agregarJTFUsuario() {
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.gridx = 2;
       gbc.gridy = 4;
       gbc.gridheight = 1;
       gbc.gridwidth  = 1;
-      gbc.anchor = GridBagConstraints.SOUTH;
+      gbc.anchor = GridBagConstraints.CENTER;
       gbc.weighty = 1.0;
       jpContenedor.add(jtfUsuario , gbc);
    }
-   
-   //metodo que agrega al layout el jpfContraseña 
+   /**
+    *   Método que agrega al gridbaglayout el jpfContraseña.
+    *   @author Diego y Bryan 
+    */ 
    private void agregarJPFContraseña () {
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.gridx = 2;
-      gbc.gridy = 5;
+      gbc.gridy = 6;
       gbc.gridheight = 1;
       gbc.gridwidth  = 1;
-      gbc.anchor = GridBagConstraints.NORTH;
+      gbc.anchor = GridBagConstraints.CENTER;
       gbc.weighty = 1.0;
       jpContenedor.add(jpfContraseña , gbc);
    }
+   /**
+    * Método que agrega al gridbaglayout el jbIngresar.
+    *  @author Diego y Bryan
+    */
+   private void agregarJBIngresar() {
+     GridBagConstraints gbc = new GridBagConstraints();
+      gbc.gridx = 1;
+      gbc.gridy = 8;
+      gbc.gridheight = 1;
+      gbc.gridwidth  = 2;
+      gbc.anchor = GridBagConstraints.NORTH;
+      gbc.weighty = 1.0;
+      jpContenedor.add(jbIngresar , gbc);
    
- 
-    
+   }
 }
 

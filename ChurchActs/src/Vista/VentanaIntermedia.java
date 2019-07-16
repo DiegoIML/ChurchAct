@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author diego
+ * @author Diego y Bryan
  */
 public class VentanaIntermedia extends JFrame {
     private JLabel jlImagen , jlTitulo;
