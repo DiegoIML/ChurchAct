@@ -12,22 +12,22 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.SoftBevelBorder;
-
+import javax.swing.JTextField;
 /**
  *
  * @author Diego y Bryan
  */
 public class VentanaUsuario extends JFrame {
     private Conexion conexion;
-    private JLabel jlTitulo;
+    private JLabel jlTituloUsuario , jlDinero , jlTituloDinero;
     private JTable jtReuniones;
-    private JButton jbOptimizar , jbEliminar , jbActualizar , jbInsertar;
-    private JPanel jpContenedor;
+    private JButton jbOptimizar , jbEliminar , jbActualizar , jbInsertar , jbInsertarHorario , jbActualizarDinero;
+    private JTabbedPane jtpContenedor;
+    private JPanel jpUsuario , jp1Vertical , jp2Horizontal , jp3Horizontal ,jp4Horizontal , jp5Vertical , jp6Vertical , jpDatos , jpConexion;
+    private JTextField jtfDinero;
+    
     /**
      * Método constructor que inicia la ventana.
      * @param conexion
@@ -35,7 +35,7 @@ public class VentanaUsuario extends JFrame {
     public VentanaUsuario() {
        //this.conexion = conexion;
        setTitle("Ventana de Usuario");
-       setSize(1200,900);
+       setSize(900,900);
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        iniciarComponentes();
        crearLayout();
@@ -46,10 +46,22 @@ public class VentanaUsuario extends JFrame {
      * Método para crear los objetos de la clase y llamar los métodos que son requeridos.
      */
     private void iniciarComponentes() {
-       jlTitulo = new JLabel("ChurchActs Ventana de Usuario.");
-       jlTitulo.setFont(new Font( "Arial Black" , Font.BOLD , 30));
-       jtReuniones = new JTable(40,20);
-       jtReuniones.setBackground(new Color(233,227,206));
+       jlTituloUsuario = new JLabel("ChurchActs Ventana de Usuario.");
+       jlTituloUsuario.setFont(new Font( "Arial Black" , Font.BOLD , 30));
+       jp1Vertical = new JPanel();
+       jp1Vertical.setBackground( new Color(62,95,138) );
+       jp2Horizontal = new JPanel();
+       jp2Horizontal.setBackground( new Color(62,95,138) );
+       jp3Horizontal = new JPanel();
+       jp3Horizontal.setBackground( new Color(62,95,138) );
+       jp4Horizontal = new JPanel();
+       jp4Horizontal.setBackground( new Color(62,95,138) );
+       jp5Vertical = new JPanel();
+       jp5Vertical.setBackground( new Color(62,95,138) );
+       jp6Vertical = new JPanel();
+       jp6Vertical.setBackground( new Color(62,95,138) );
+       jtReuniones = new JTable(15,15);
+       jtReuniones.setBackground(new Color(230 , 214, 144) );
        jtReuniones.setFont( new Font("Arial Black" , Font.BOLD , 15));
        jbOptimizar = new JButton("Optimizar");
        jbOptimizar.setFont(new Font("Arial Black" , Font.BOLD , 15));
@@ -67,7 +79,22 @@ public class VentanaUsuario extends JFrame {
        jbInsertar.setFont( new Font("Arial Black" , Font.BOLD , 15));   
        jbInsertar.setIcon( new ImageIcon(getClass().getClassLoader().getResource("Imagenes/jbInsertar.png")));
        jbInsertar.setBackground(new Color (230, 214, 144));
-       jpContenedor = new JPanel();
+       jbInsertarHorario = new JButton("Insertar Horario");
+       jbInsertarHorario.setFont( new Font("Arial Black" , Font.BOLD , 15));   
+       jbInsertarHorario.setIcon( new ImageIcon(getClass().getClassLoader().getResource("Imagenes/jbInsertarHorario.png")));
+       jbInsertarHorario.setBackground(new Color (230, 214, 144));
+       jlDinero = new JLabel("0");
+       jlDinero.setFont(new Font("Arial Black" , Font.BOLD , 15));
+       jlTituloDinero = new JLabel("Dinero Actual");
+       jlTituloDinero.setFont( new Font("Arial Black" , Font.BOLD , 20));
+       jtfDinero = new JTextField(10); 
+       jtfDinero.setFont( new Font("Arial Black" , Font.BOLD , 15));
+       jbActualizarDinero = new JButton("Actualizar");
+       jbActualizarDinero.setFont( new Font("Arial", Font.BOLD , 15));
+       jtpContenedor = new JTabbedPane();
+       jpUsuario = new JPanel();
+       jpDatos = new JPanel();
+       jpConexion = new VentanaConexion();
     }
     
     
@@ -77,29 +104,44 @@ public class VentanaUsuario extends JFrame {
      */
     
     private void crearLayout() {
-      jpContenedor.setBackground( new Color(62,95,138));
-      jpContenedor.setLayout (new GridBagLayout());
-      agregarJLTitulo();
-      agregarJTReuniones();
-      agregarJBOptimizar();
-      agregarJBEliminar();
+      jpUsuario.setLayout( new GridBagLayout());
+      jpDatos.setLayout( new GridBagLayout());
+      jpUsuario.setBackground( new Color(62,95,138));
+      jtpContenedor.setFont(new Font("Arial Black" , Font.BOLD , 13));
+      jtpContenedor.addTab("Usuario" , jpUsuario);
+      jtpContenedor.addTab("Datos" , jpDatos);
+      jtpContenedor.addTab("Conexion" , jpConexion);
       agregarJBActualizar();
+      agregarJBEliminar();
       agregarJBInsertar();
-      add(jpContenedor);
+      agregarJBInsertarHorario();
+      agregarJBOptimizar();
+      agregarJLDinero();
+      agregarJLTituloUsuario();
+      agregarJP1Vertical();
+      agregarJP2Horizontal();
+      agregarJP3Horizontal();
+      agregarJP4Horizontal();
+      agregarJP5Vertical();
+      agregarJP6Vertical();
+      agregarJTReuniones();
+      agregarJLTituloDinero();
+      agregarJTFDinero();
+      agregarJBActualizarDinero();
+      add(jtpContenedor);
     }
     
     /**
      * Método que agrega al gridbaglayout el jlTitulo. 
      */
-    private void agregarJLTitulo() {
+    private void agregarJLTituloUsuario() {
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.gridx = 1;
       gbc.gridy = 0;
       gbc.gridheight = 1;
-      gbc.gridwidth =  1;
-      gbc.anchor = GridBagConstraints.SOUTH;
-      //gbc.weighty = 1.0;
-      jpContenedor.add(jlTitulo , gbc);
+      gbc.gridwidth =  7;
+      //gbc.anchor = GridBagConstraints.CENTER;
+      jpUsuario.add(jlTituloUsuario , gbc);
     }
     /**
      * Método que agrega al gridbaglayout el jlReuniones.
@@ -107,66 +149,204 @@ public class VentanaUsuario extends JFrame {
     private void agregarJTReuniones() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.gridheight = 8;
-        gbc.gridwidth =  1;
+        gbc.gridy = 2;
+        gbc.gridheight = 5;
+        gbc.gridwidth =  3;
         gbc.weighty = 1.0;
         gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        jpContenedor.add(jtReuniones ,gbc);
+        gbc.fill = GridBagConstraints.BOTH;
+        jpUsuario.add(jtReuniones ,gbc);
     }
     /**
-     *  Método que agrega al gridBagLayout el jbOptimizar.
+     *  Método que agrega al gridBagLayout el jb    Optimizar.
      */
     private void agregarJBOptimizar() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 2;
+        gbc.gridx = 5;
+        gbc.gridy = 7;
         gbc.gridheight = 1;
         gbc.gridwidth =  1;
         gbc.weighty = 1.0;
-        //gbc.anchor = GridBagConstraints.CENTER;
-        jpContenedor.add(jbOptimizar ,gbc);
+        //gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        jpUsuario.add(jbOptimizar ,gbc);
     }
     /**
      * Método que agrega al gridBagLayout el jbEliminar.
      */
     private void agregarJBEliminar() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 4;
+        gbc.gridx = 5;
+        gbc.gridy = 6;
         gbc.gridheight = 1;
         gbc.gridwidth =  1;
         gbc.weighty = 1.0;
-        //gbc.anchor = GridBagConstraints.CENTER;
-        jpContenedor.add(jbEliminar ,gbc);
+        //gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        jpUsuario.add(jbEliminar ,gbc);
     }
     /**
      * Método que agrega al gridBagLayout el jbActualizar
      */
     private void agregarJBActualizar() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 6;
+        gbc.gridx = 5;
+        gbc.gridy = 4;
         gbc.gridheight = 1;
         gbc.gridwidth =  1;
         gbc.weighty = 1.0;
-        //gbc.anchor = GridBagConstraints.CENTER;
-        jpContenedor.add(jbActualizar ,gbc);
+        //gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        jpUsuario.add(jbActualizar ,gbc);
     }
     /**
      *  Método que agrega al gridBagLayout el jbInsertar
      */
     private void agregarJBInsertar() {
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 2;
+        gbc.gridheight = 1;
+        gbc.gridwidth =  1;
+        gbc.weighty = 1.0;
+        //gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        jpUsuario.add(jbInsertar ,gbc);
+    }
+    
+    private void agregarJP1Vertical() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridheight = 7;
+        gbc.gridwidth =  1;
+        gbc.weighty = 1.0; 
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        jpUsuario.add(jp1Vertical ,gbc);    
+    }
+    
+    private void agregarJP2Horizontal() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridheight = 1;
+        gbc.gridwidth =  7;
+        gbc.weightx = 1.0; 
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        jpUsuario.add(jp2Horizontal ,gbc);    
+    }
+    
+     private void agregarJP3Horizontal() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridheight = 1;
+        gbc.gridwidth =  4;
+        gbc.weightx = 1.0; 
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        jpUsuario.add(jp3Horizontal ,gbc);    
+    }
+     
+    private void agregarJP4Horizontal() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.gridheight = 1;
+        gbc.gridwidth =  7;
+        gbc.weightx = 1.0; 
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        jpUsuario.add(jp4Horizontal ,gbc);    
+    }
+    
+    private void agregarJP5Vertical() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 2;
+        gbc.gridheight = 7;
+        gbc.gridwidth =  1;
+        gbc.weighty = 1.0; 
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        jpUsuario.add(jp5Vertical ,gbc);    
+    }
+    
+    private void agregarJP6Vertical() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 6;
+        gbc.gridy = 2;
+        gbc.gridheight = 7;
+        gbc.gridwidth =  1;
+        gbc.weighty = 1.0; 
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        jpUsuario.add(jp6Vertical ,gbc);    
+    }
+    
+    private void agregarJBInsertarHorario() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 8;
+        gbc.gridheight = 1;
+        gbc.gridwidth =  1;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        jpUsuario.add(jbInsertarHorario ,gbc);
+    }
+    
+    private void agregarJLDinero() {
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 8;
         gbc.gridheight = 1;
         gbc.gridwidth =  1;
-        //gbc.anchor = GridBagConstraints.CENTER;
-        gbc.weighty = 1.0; 
-        jpContenedor.add(jbInsertar ,gbc);
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        jpUsuario.add(jlDinero ,gbc);
     }
     
+    //VENTANA DATOS.
+    private void agregarJLTituloDinero() {
+       GridBagConstraints gbc = new GridBagConstraints();
+       gbc.gridx = 1;
+       gbc.gridy = 0;
+       gbc.gridheight = 1;
+       gbc.gridwidth =  3;
+       gbc.weightx = 1.0;
+       gbc.fill = GridBagConstraints.VERTICAL;
+       jpDatos.add(jlTituloDinero ,gbc);
+    }
+    
+    private void agregarJTFDinero() {
+       GridBagConstraints gbc = new GridBagConstraints();
+       gbc.gridx = 1;
+       gbc.gridy = 2;
+       gbc.gridheight = 1;
+       gbc.gridwidth  = 1;
+       gbc.anchor = GridBagConstraints.CENTER;
+       //gbc.anchor = GridBagConstraints.NORTHEAST;
+       gbc.weightx = 1.0;
+       gbc.weighty = 1.0;
+       
+       //gbc.fill = GridBagConstraints.VERTICAL;
+       jpDatos.add(jtfDinero ,gbc);
+    }
+    
+    private void agregarJBActualizarDinero() {
+       GridBagConstraints gbc = new GridBagConstraints();
+       gbc.gridx = 3;
+       gbc.gridy = 2;
+       gbc.gridheight = 1;
+       gbc.gridwidth =  1;
+       gbc.anchor = GridBagConstraints.WEST;
+       //gbc.anchor = GridBagConstraints.NORTHWEST;
+       gbc.weightx = 1.0;
+       gbc.weighty = 1.0;
+       //gbc.fill = GridBagConstraints.HORIZONTAL;
+       jpDatos.add(jbActualizarDinero ,gbc);
+    }
     
 }
