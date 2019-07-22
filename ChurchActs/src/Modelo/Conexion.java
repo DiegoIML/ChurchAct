@@ -12,20 +12,11 @@ import java.util.logging.Logger;
  */
 
 public class Conexion {
-    private Connection conn;
-    private String puerto;
-    private String usuario;
-    private String contraseña;
-    protected String urlBaseDatos;
-
-    
-    public Conexion ()  {
-         this.conn = null;
-         this.puerto = "5434";
-         this.usuario = "postgres";
-         this.contraseña = "diego";
-         this.urlBaseDatos =  "jdbc:postgresql://localhost:" + puerto + "/" + usuario;
-    }
+    private Connection conn = null;
+    private String puerto = "5434";
+    private String usuario = "postgres";
+    private String contraseña = "diego";
+    protected String urlBaseDatos =  "jdbc:postgresql://localhost:" + puerto + "/ChurchActs";
     
     
       public void setDatosBD ( String puerto , String usuario , String contraseña ) {
@@ -35,7 +26,7 @@ public class Conexion {
     }   
     
       
-       public Connection getConn(){
+       public Connection getConexion(){
             try {  
               Class.forName("org.postgresql.Driver");
               conn = DriverManager.getConnection(this.urlBaseDatos, this.usuario , this.contraseña);

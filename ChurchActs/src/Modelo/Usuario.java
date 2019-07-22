@@ -15,6 +15,11 @@ public class Usuario {
         this.contraseña = contraseña;
     }
     
+    public Usuario(String nombre , String contraseña) {
+       this.nombre  = nombre;
+       this.contraseña = contraseña;        
+    }
+    
     public int getId() {
         return id;
     }

@@ -22,7 +22,7 @@ public class VentanaLogin extends JFrame {
  private JPasswordField jpfContraseña ;
  private JTextField jtfUsuario ;
  private JLabel  jlUsuario , jlContraseña , jlTitulo , jlImagen;
- private JPanel jpLogin , jpConexion;
+ private JPanel jpLogin;
  private JTabbedPane jtpContenedor;
  private JButton jbIngresar;
    
@@ -32,9 +32,11 @@ public class VentanaLogin extends JFrame {
     */
     public VentanaLogin () {
        setTitle("Ventana de Inicio");
-       setSize(500,500);
+       setSize(400,700);
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       setIconImage(new ImageIcon( getClass().getClassLoader().getResource("Imagenes/IconoIglesia.png")).getImage());
        iniciarComponentes();
+       setResizable(false);
        crearLayout();
        setVisible(true);
     }
@@ -51,22 +53,20 @@ public class VentanaLogin extends JFrame {
        jlImagen = new JLabel();
        jlImagen.setIcon( new ImageIcon( getClass().getClassLoader().getResource("Imagenes/IconoVaron.png")));
        jlUsuario = new JLabel("Usuario : ");
-       jlUsuario.setFont( new Font("Arial Black" , Font.BOLD , 13));
+       jlUsuario.setFont( new Font("Arial Black" , Font.BOLD , 15));
        jlContraseña = new JLabel("Contraseña : ");
-       jlContraseña.setFont( new Font("Arial Black" , Font.BOLD , 13));
+       jlContraseña.setFont( new Font("Arial Black" , Font.BOLD , 15));
        jtfUsuario = new JTextField(12);
-       jtfUsuario.setFont( new Font("Arial Black" , Font.BOLD , 13));
+       jtfUsuario.setFont( new Font("Arial Black" , Font.BOLD , 15));
        jpfContraseña = new JPasswordField(12);
-       jpfContraseña.setFont( new Font("Arial Black" , Font.BOLD ,13));
+       jpfContraseña.setFont( new Font("Arial Black" , Font.BOLD ,15));
        jbIngresar = new JButton("Ingresar");
-       jbIngresar.setFont( new Font("Arial Black" , Font.BOLD , 13));
+       jbIngresar.setFont( new Font("Arial Black" , Font.BOLD , 15));
        jbIngresar.setBackground( new Color(230, 214, 144));
        jbIngresar.setIcon( new ImageIcon( getClass().getClassLoader().getResource("Imagenes/jbIngresar.png")) );
-       jbIngresar.addActionListener( new EventoLoginUsuario( conexion, jtfUsuario.getText(), String.valueOf(jpfContraseña.getPassword())  ) );
- 
+       jbIngresar.addActionListener( new EventoLoginUsuario( conexion, jtfUsuario , jpfContraseña , this) );
        jtpContenedor = new JTabbedPane();
        jpLogin = new JPanel();
-       jpConexion = new VentanaConexion();
     }
     /**
      * Método que permite disponer los componentes para la GUI login.
@@ -84,10 +84,9 @@ public class VentanaLogin extends JFrame {
       agregarJTFUsuario();
       agregarJPFContraseña();
       agregarJBIngresar();
-      jpLogin.setBackground(new Color(231, 235, 218));
+      jpLogin.setBackground(new Color(92,105,138));
       jtpContenedor.setFont(new Font("Arial Black" , Font.BOLD , 13));
       jtpContenedor.addTab("Login" , jpLogin);
-      jtpContenedor.addTab("Conexion" , jpConexion);
       //add(jtpLogin);
       ///jtpConexion.addTab("Conexion" , jpContenedor);
       add(jtpContenedor);

@@ -1,5 +1,7 @@
 package Vista;
 
+import Controlador.EventoActualizarDatosBD;
+import Modelo.Conexion;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -16,12 +18,14 @@ import javax.swing.JTextField;
  * @author Diego y Bryan
  */
 public class VentanaConexion extends JPanel {
+ private Conexion conexionBD;   
  private JPasswordField jpfContraseñaPsql;
  private JTextField jtfUsuarioPsql , jtfPuerto;
  private JLabel   jlTituloConexion , jlPuerto , jlUsuarioPsql , jlContraseñaPsql;
  private JButton jbActualizar;
  
- public VentanaConexion() {
+ public VentanaConexion( Conexion conexionBD) {
+       this.conexionBD  = conexionBD;
        jlTituloConexion = new JLabel("Cambiar datos de conexión");
        jlTituloConexion.setFont( new Font("Arial Black" , Font.BOLD , 20));
        jlPuerto = new JLabel("Puerto : ");
@@ -40,6 +44,7 @@ public class VentanaConexion extends JPanel {
        jbActualizar.setFont( new Font("Arial Black" , Font.BOLD , 13));
        jbActualizar.setIcon(new ImageIcon( getClass().getClassLoader().getResource("Imagenes/postgresql.png")) );
        jbActualizar.setBackground( new Color(230, 214, 144));
+       jbActualizar.addActionListener( new EventoActualizarDatosBD(conexionBD , jtfPuerto , jtfUsuarioPsql , jpfContraseñaPsql));
        crearLayout();
  }
  

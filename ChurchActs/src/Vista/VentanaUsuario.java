@@ -1,10 +1,15 @@
 package Vista;
 
-import Modelo.BordeRedondo;
+
+import Controlador.EventoActualizarIngresos;
+import Controlador.EventoActualizarReunion;
+import Controlador.EventoEliminarReunion;
+import Controlador.EventoIngresarExcel;
+import Controlador.EventoIngresarReuniones;
+import Controlador.EventoInsertarReunion;
 import Modelo.Conexion;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.ImageIcon;
@@ -12,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -20,14 +26,14 @@ import javax.swing.JTextField;
  * @author Diego y Bryan
  */
 public class VentanaUsuario extends JFrame {
-    private Conexion conexion;
+    private Conexion conexionBD;
     private JLabel jlTituloUsuario , jlDinero , jlTituloDinero;
     private JTable jtReuniones;
-    private JButton jbOptimizar , jbEliminar , jbActualizar , jbInsertar , jbInsertarHorario , jbActualizarDinero;
+    private JButton jbOptimizar , jbEliminar , jbActualizar , jbInsertar , jbInsertarHorario , jbActualizarDinero , jbDescargar;
     private JTabbedPane jtpContenedor;
-    private JPanel jpUsuario , jp1Vertical , jp2Horizontal , jp3Horizontal ,jp4Horizontal , jp5Vertical , jp6Vertical , jpDatos , jpConexion;
+    private JPanel jpUsuario , jp1Vertical , jp2Horizontal , jp3Horizontal ,jp4Horizontal , jp5Vertical , jp6Vertical , jpDatos;
     private JTextField jtfDinero;
-    
+    private JScrollPane jspBarra;
     /**
      * Método constructor que inicia la ventana.
      * @param conexion
@@ -35,8 +41,9 @@ public class VentanaUsuario extends JFrame {
     public VentanaUsuario() {
        //this.conexion = conexion;
        setTitle("Ventana de Usuario");
-       setSize(900,900);
+       setSize(1000,900);
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       setIconImage(new ImageIcon( getClass().getClassLoader().getResource("Imagenes/IconoIglesia.png")).getImage());
        iniciarComponentes();
        crearLayout();
        setVisible(true);
@@ -49,52 +56,76 @@ public class VentanaUsuario extends JFrame {
        jlTituloUsuario = new JLabel("ChurchActs Ventana de Usuario.");
        jlTituloUsuario.setFont(new Font( "Arial Black" , Font.BOLD , 30));
        jp1Vertical = new JPanel();
-       jp1Vertical.setBackground( new Color(62,95,138) );
+       jp1Vertical.setBackground( new Color(92,105,138));
        jp2Horizontal = new JPanel();
-       jp2Horizontal.setBackground( new Color(62,95,138) );
+       jp2Horizontal.setBackground( new Color(92,105,138));
        jp3Horizontal = new JPanel();
-       jp3Horizontal.setBackground( new Color(62,95,138) );
+       jp3Horizontal.setBackground( new Color(92,105,138) );
        jp4Horizontal = new JPanel();
-       jp4Horizontal.setBackground( new Color(62,95,138) );
+       jp4Horizontal.setBackground( new Color(92,105,138) );
        jp5Vertical = new JPanel();
-       jp5Vertical.setBackground( new Color(62,95,138) );
+       jp5Vertical.setBackground( new Color(92,105,138) );
        jp6Vertical = new JPanel();
-       jp6Vertical.setBackground( new Color(62,95,138) );
-       jtReuniones = new JTable(15,15);
+       jp6Vertical.setBackground( new Color(92,105,138));
+       
+       
+       jtReuniones = new JTable() { 
+          @Override
+          public boolean isCellEditable(int filaIndice , int colIndice) {
+            return false;
+          }
+       };
+       
        jtReuniones.setBackground(new Color(230 , 214, 144) );
        jtReuniones.setFont( new Font("Arial Black" , Font.BOLD , 15));
-       jbOptimizar = new JButton("Optimizar");
+       jspBarra=new JScrollPane();
+       jspBarra.setViewportView(jtReuniones);
+       jtReuniones.setVisible(false);
+       jbOptimizar = new JButton(" Optimizar");
        jbOptimizar.setFont(new Font("Arial Black" , Font.BOLD , 15));
        jbOptimizar.setIcon( new ImageIcon(getClass().getClassLoader().getResource("Imagenes/jbOptimizar.png")));
        jbOptimizar.setBackground(new Color (230, 214, 144));
-       jbEliminar = new JButton("Eliminar");
+       jbEliminar = new JButton(" Eliminar");
        jbEliminar.setFont(new Font("Arial Black" ,  Font.BOLD , 15));
        jbEliminar.setIcon( new ImageIcon(getClass().getClassLoader().getResource("Imagenes/jbEliminar.png")));
        jbEliminar.setBackground(new Color (230, 214, 144));
-       jbActualizar  = new JButton("Actualizar");
+       jbActualizar  = new JButton(" Actualizar");
        jbActualizar.setFont( new Font("Arial Black" , Font.BOLD  , 15));
        jbActualizar.setIcon( new ImageIcon(getClass().getClassLoader().getResource("Imagenes/jbActualizar.png")));
        jbActualizar.setBackground(new Color (230, 214, 144));
-       jbInsertar = new JButton("Insertar");
+       jbInsertar = new JButton(" Insertar");
        jbInsertar.setFont( new Font("Arial Black" , Font.BOLD , 15));   
        jbInsertar.setIcon( new ImageIcon(getClass().getClassLoader().getResource("Imagenes/jbInsertar.png")));
        jbInsertar.setBackground(new Color (230, 214, 144));
-       jbInsertarHorario = new JButton("Insertar Horario");
+       jbInsertarHorario = new JButton(" Insertar Reuniones");
        jbInsertarHorario.setFont( new Font("Arial Black" , Font.BOLD , 15));   
        jbInsertarHorario.setIcon( new ImageIcon(getClass().getClassLoader().getResource("Imagenes/jbInsertarHorario.png")));
        jbInsertarHorario.setBackground(new Color (230, 214, 144));
-       jlDinero = new JLabel("0");
+       jlDinero = new JLabel(" ");
        jlDinero.setFont(new Font("Arial Black" , Font.BOLD , 15));
        jlTituloDinero = new JLabel("Dinero Actual");
-       jlTituloDinero.setFont( new Font("Arial Black" , Font.BOLD , 20));
+       jlTituloDinero.setFont( new Font("Arial Black" , Font.BOLD , 30));
        jtfDinero = new JTextField(10); 
        jtfDinero.setFont( new Font("Arial Black" , Font.BOLD , 15));
-       jbActualizarDinero = new JButton("Actualizar");
-       jbActualizarDinero.setFont( new Font("Arial", Font.BOLD , 15));
+       jbActualizarDinero = new JButton(" Actualizar");
+       jbActualizarDinero.setFont( new Font("Arial Black", Font.BOLD , 15));
+       jbActualizarDinero.setIcon( new ImageIcon(getClass().getClassLoader().getResource("Imagenes/jbDinero.png")));
+       jbActualizarDinero.setBackground( new Color(230 , 214 , 144));
+       jbDescargar = new JButton(" Descargar");
+       jbDescargar.setFont( new Font("Arial Black" , Font.BOLD , 15));
+       jbDescargar.setIcon( new ImageIcon(getClass().getClassLoader().getResource("Imagenes/jbDescargar.png")));
+       jbInsertar.addActionListener( new EventoInsertarReunion(this, jtReuniones));
+       jbActualizar.addActionListener( new EventoActualizarReunion(this));
+       //jbInsertarHorario.addActionListener( new EventoIngresarReuniones(jtReuniones , this));
+       jbInsertarHorario.addActionListener( new EventoIngresarExcel(jtReuniones , this));
+       jbActualizarDinero.addActionListener( new EventoActualizarIngresos(jtfDinero , jlDinero));
+       jbEliminar.addActionListener( new EventoEliminarReunion(jtReuniones));
+      // jbDescargar.setIcon( new ImageIcon(getClass().getClassLoader().getResource("Imagenes/jbInsertarHorario.png")));
+       jbDescargar.setBackground(new Color (230, 214, 144));
        jtpContenedor = new JTabbedPane();
        jpUsuario = new JPanel();
        jpDatos = new JPanel();
-       jpConexion = new VentanaConexion();
+       jpDatos.setBackground( new Color(92,105,138) );
     }
     
     
@@ -106,16 +137,16 @@ public class VentanaUsuario extends JFrame {
     private void crearLayout() {
       jpUsuario.setLayout( new GridBagLayout());
       jpDatos.setLayout( new GridBagLayout());
-      jpUsuario.setBackground( new Color(62,95,138));
+      jpUsuario.setBackground( new Color(92,105,138)  );
       jtpContenedor.setFont(new Font("Arial Black" , Font.BOLD , 13));
       jtpContenedor.addTab("Usuario" , jpUsuario);
       jtpContenedor.addTab("Datos" , jpDatos);
-      jtpContenedor.addTab("Conexion" , jpConexion);
       agregarJBActualizar();
       agregarJBEliminar();
       agregarJBInsertar();
       agregarJBInsertarHorario();
       agregarJBOptimizar();
+      agregarJBDescargar();
       agregarJLDinero();
       agregarJLTituloUsuario();
       agregarJP1Vertical();
@@ -124,7 +155,7 @@ public class VentanaUsuario extends JFrame {
       agregarJP4Horizontal();
       agregarJP5Vertical();
       agregarJP6Vertical();
-      agregarJTReuniones();
+      agregarJSPBarra();
       agregarJLTituloDinero();
       agregarJTFDinero();
       agregarJBActualizarDinero();
@@ -132,7 +163,8 @@ public class VentanaUsuario extends JFrame {
     }
     
     /**
-     * Método que agrega al gridbaglayout el jlTitulo. 
+     * Método que agrega al gridbaglayout el jlTituloUsuario. 
+     * @author : Diego y Bryan. 
      */
     private void agregarJLTituloUsuario() {
       GridBagConstraints gbc = new GridBagConstraints();
@@ -140,13 +172,12 @@ public class VentanaUsuario extends JFrame {
       gbc.gridy = 0;
       gbc.gridheight = 1;
       gbc.gridwidth =  7;
-      //gbc.anchor = GridBagConstraints.CENTER;
       jpUsuario.add(jlTituloUsuario , gbc);
     }
     /**
-     * Método que agrega al gridbaglayout el jlReuniones.
+     * Método que agrega al gridbaglayout el jspBarra con la jtReuniones.
      */
-    private void agregarJTReuniones() {
+    private void agregarJSPBarra() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 2;
@@ -155,10 +186,25 @@ public class VentanaUsuario extends JFrame {
         gbc.weighty = 1.0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        jpUsuario.add(jtReuniones ,gbc);
+        jpUsuario.add(jspBarra ,gbc);
     }
     /**
-     *  Método que agrega al gridBagLayout el jb    Optimizar.
+     *  Método que agrega al gridBagLayout el jbDescargar
+     */
+    private void agregarJBDescargar() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 8;
+        gbc.gridheight = 1;
+        gbc.gridwidth =  1;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        jpUsuario.add(jbDescargar ,gbc);
+    }
+    
+    
+    /**
+     *  Método que agrega al gridBagLayout el jbOptimizar.
      */
     private void agregarJBOptimizar() {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -167,7 +213,6 @@ public class VentanaUsuario extends JFrame {
         gbc.gridheight = 1;
         gbc.gridwidth =  1;
         gbc.weighty = 1.0;
-        //gbc.weightx = 1.0;
         gbc.anchor = GridBagConstraints.CENTER;
         jpUsuario.add(jbOptimizar ,gbc);
     }
@@ -181,7 +226,6 @@ public class VentanaUsuario extends JFrame {
         gbc.gridheight = 1;
         gbc.gridwidth =  1;
         gbc.weighty = 1.0;
-        //gbc.weightx = 1.0;
         gbc.anchor = GridBagConstraints.CENTER;
         jpUsuario.add(jbEliminar ,gbc);
     }
@@ -327,11 +371,8 @@ public class VentanaUsuario extends JFrame {
        gbc.gridheight = 1;
        gbc.gridwidth  = 1;
        gbc.anchor = GridBagConstraints.CENTER;
-       //gbc.anchor = GridBagConstraints.NORTHEAST;
        gbc.weightx = 1.0;
        gbc.weighty = 1.0;
-       
-       //gbc.fill = GridBagConstraints.VERTICAL;
        jpDatos.add(jtfDinero ,gbc);
     }
     
@@ -342,10 +383,8 @@ public class VentanaUsuario extends JFrame {
        gbc.gridheight = 1;
        gbc.gridwidth =  1;
        gbc.anchor = GridBagConstraints.WEST;
-       //gbc.anchor = GridBagConstraints.NORTHWEST;
        gbc.weightx = 1.0;
        gbc.weighty = 1.0;
-       //gbc.fill = GridBagConstraints.HORIZONTAL;
        jpDatos.add(jbActualizarDinero ,gbc);
     }
     
